@@ -1,0 +1,72 @@
+config {
+    type: "view",
+    name: "sessions",
+    description: "Example sessions to test and demonstrate real user sessions."
+}
+
+js {
+    const sessions = [{
+            "event": "session start",
+            "data": {
+                "id": "s1",
+                "start": 1726300800000,
+                "isNew": true,
+                "count": 1,
+                "runs": 1,
+                "storage": true,
+                "referrer": ""
+            },
+            "globals": {
+                "pagegroup": "home"
+            },
+            "user": {
+                "session": "s1",
+                "device": "3bws8qiv"
+            },
+            "source": {
+                "type": "web",
+                "id": "https://www.example.com/",
+                "previous_id": ""
+            }
+        },
+        {
+            "event": "session start",
+            "data": {
+                "id": "s2",
+                "start": 1726302660000,
+                "isNew": false,
+                "count": 2,
+                "runs": 1,
+                "storage": true,
+                "referrer": ""
+            },
+            "globals": {
+                "pagegroup": "landingpage"
+            },
+            "user": {
+                "session": "s2",
+                "device": "3bws8qiv"
+            },
+            "source": {
+                "type": "web",
+                "id": "https://www.example.com/use-case/",
+                "previous_id": "https://www.google.com"
+            }
+        }
+    ];
+
+    let sessionSQL = sessions.map(session => `
+    SELECT
+      '${session.event}' AS event,
+      '${JSON.stringify(session.data)}' AS data,
+      '${JSON.stringify(session.globals)}' AS globals,
+      '${JSON.stringify(session.user)}' AS user,
+      '${JSON.stringify(session.source)}' AS source,
+      TIMESTAMP_MILLIS(${session.data.start}) AS timestamp,
+      CURRENT_TIMESTAMP() AS createdAt
+  `).join(' UNION ALL ');
+}
+
+SELECT
+  *
+FROM ( ${sessionSQL} )
