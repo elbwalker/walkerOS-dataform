@@ -1,0 +1,5 @@
+defaultProject: playground-388912
+defaultLocation: EU
+defaultDataset: walkerOS
+defaultAssertionDataset: dataform_assertions
+dataformCoreVersion: 3.0.0-beta.4
