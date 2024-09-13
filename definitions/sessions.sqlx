@@ -1,5 +1,5 @@
 config {
-    type: "view",
+    type: "table",
     name: "sessions",
     description: "Example sessions to test and demonstrate real user sessions."
 }
