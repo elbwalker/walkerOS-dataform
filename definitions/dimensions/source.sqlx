@@ -1,0 +1,95 @@
+config {
+    type: "view",
+    name: "dimension-source",
+    description: "",
+}
+
+WITH
+  sessions AS (
+  SELECT
+    *
+  FROM
+    ${ref("session_start-data")}
+  WHERE
+    1=1
+    --AND DATE(timestamp) >= DATE_SUB(CURRENT_DATE(), INTERVAL 2 DAY)
+    AND 1=1 ),
+  sources AS (
+  SELECT
+    timestamp,
+    id,
+    `source`,
+    referrer,
+    SPLIT(referrer, '.') AS full_parts,
+    ARRAY_REVERSE(SPLIT(referrer, '.')) AS rev_parts,
+    ARRAY_LENGTH(SPLIT(referrer, '.')) AS parts_count,
+    NET.PUBLIC_SUFFIX(referrer) AS tld,
+    NET.REG_DOMAIN(referrer) AS sld_tld,
+    CASE
+      WHEN NET.PUBLIC_SUFFIX(referrer) = referrer THEN NULL
+      ELSE ARRAY_REVERSE(SPLIT(referrer, '.'))[SAFE_OFFSET(ARRAY_LENGTH(SPLIT(NET.PUBLIC_SUFFIX(referrer), '.')))]
+  END
+    AS sld,
+    NET.HOST(source_id) AS source_domain,
+    NET.REG_DOMAIN(NET.HOST(source_id)) AS source_sld_tld
+  FROM
+    sessions ),
+  prioritized_matches AS (
+  SELECT
+    s.*,
+    ARRAY_AGG( STRUCT( sc.category,
+        CASE
+          WHEN s.source = sc.source THEN 1
+          WHEN s.referrer = sc.source THEN 2
+          WHEN sc.source IS NULL THEN 3
+          WHEN s.sld_tld = sc.source THEN 4
+          WHEN s.sld = sc.source THEN 5
+          ELSE 6
+      END
+        AS priority )
+    ORDER BY
+      CASE
+        WHEN s.source = sc.source THEN 1
+        WHEN s.referrer = sc.source THEN 2
+        WHEN sc.source IS NULL THEN 3
+        WHEN s.sld_tld = sc.source THEN 4
+        WHEN s.sld = sc.source THEN 5
+        ELSE 6
+    END
+    LIMIT
+      1 )[
+  OFFSET
+    (0)] AS best_match
+  FROM
+    sources s
+  LEFT JOIN
+    ${ref("source_categories")} sc
+  ON
+    s.source = sc.source
+    OR s.referrer = sc.source
+    OR (s.referrer IS NULL
+      AND sc.source IS NULL)
+    OR s.sld_tld = sc.source
+    OR s.sld = sc.source
+  GROUP BY
+    ALL )
+SELECT
+  timestamp,
+  id,
+  `source`,
+  CASE
+    WHEN best_match.category IS NOT NULL THEN best_match.category
+    WHEN referrer = source_domain THEN 'self'
+    WHEN sld_tld = source_sld_tld THEN 'internal'
+    WHEN (sld IS NULL
+    AND referrer IS NOT NULL) THEN NULL
+    ELSE 'referral'
+END
+  AS category,
+  referrer AS domain,
+  sld_tld,
+  sld
+FROM
+  prioritized_matches
+ORDER BY
+  id
