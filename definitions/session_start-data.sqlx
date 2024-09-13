@@ -1,0 +1,30 @@
+config {
+  type: "view",
+  name: "session_start-data",
+  description: "Resolved data object",
+}
+
+SELECT
+  timestamp,
+  NULLIF(JSON_EXTRACT_SCALAR(data, '$.id'), "") as id,
+  NULLIF(JSON_EXTRACT_SCALAR(data, '$.device'), "") as device,
+  NULLIF(JSON_EXTRACT_SCALAR(data, '$.marketing'), "") as marketing,
+  NULLIF(JSON_EXTRACT_SCALAR(data, '$.source'), "") as source, -- UTM
+  NULLIF(JSON_EXTRACT_SCALAR(data, '$.medium'), "") as medium, -- UTM
+  NULLIF(JSON_EXTRACT_SCALAR(data, '$.campaign'), "") as campaign, -- UTM
+  NULLIF(JSON_EXTRACT_SCALAR(data, '$.clickId'), "") as clickId, -- UTM
+  NULLIF(JSON_EXTRACT_SCALAR(data, '$.term'), "") as term, -- UTM
+  NULLIF(JSON_EXTRACT_SCALAR(data, '$.referrer'), "") as referrer,
+  NULLIF(JSON_EXTRACT_SCALAR(data, '$.storage'), "") as storage,
+  NULLIF(JSON_EXTRACT_SCALAR(data, '$.isNew'), "") as is_new,
+  NULLIF(JSON_EXTRACT_SCALAR(data, '$.count'), "") as count,
+  NULLIF(JSON_EXTRACT_SCALAR(data, '$.start'), "") as start,
+  NULLIF(JSON_EXTRACT_SCALAR(data, '$.updated'), "") as updated,
+  data,
+  NULLIF(JSON_EXTRACT_SCALAR(source, '$.id'), "") as source_id,
+  NULLIF(JSON_EXTRACT_SCALAR(source, '$.previous_id'), "") as source_previous_id,
+FROM
+  ${ref("sessions")}
+WHERE
+  1=1
+  --AND DATE(timestamp) >= DATE_SUB(CURRENT_DATE(), INTERVAL 2 DAY)
