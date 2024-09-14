@@ -1,0 +1,47 @@
+config {
+    type: "view",
+    name: "dimension-medium",
+    description: "Calculates a system-defined medium",
+}
+
+WITH
+  dimension_source AS (
+  SELECT
+    *
+  FROM
+    ${ref("dimension-source")} ),
+  essd AS (
+  SELECT
+    *
+  FROM
+    ${ref("session_start-data")} )
+SELECT
+  essd.timestamp,
+  essd.id,
+  essd.referrer,
+  essd.marketing,
+  s.category,
+  CASE
+  -- UTM
+    WHEN essd.medium IS NOT NULL THEN essd.medium
+  -- Direct traffic
+    WHEN (essd.referrer IS NULL
+    AND essd.marketing IS NULL) THEN 'direct'
+  -- Organic Search traffic
+    WHEN ((s.category = 'search' OR s.category = 'social') AND essd.marketing IS NULL) THEN 'organic'
+  -- Paid
+  -- TODO Add more paid flags
+    WHEN (essd.clickId IS NOT NULL) THEN 'paid'
+    ELSE 'other'
+END
+  AS medium
+FROM
+  essd
+JOIN
+  dimension_source s
+ON
+  essd.id = s.id
+  AND essd.timestamp = s.timestamp
+WHERE
+  1=1
+  --AND DATE(essd.timestamp) >= DATE_SUB(CURRENT_DATE(), INTERVAL 2 DAY)
