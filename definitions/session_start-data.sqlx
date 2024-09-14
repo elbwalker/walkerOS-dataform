@@ -6,6 +6,7 @@ config {
 
 SELECT
   timestamp,
+  id as event_id,
   NULLIF(JSON_EXTRACT_SCALAR(data, '$.id'), "") as id,
   NULLIF(JSON_EXTRACT_SCALAR(data, '$.device'), "") as device,
   NULLIF(JSON_EXTRACT_SCALAR(data, '$.marketing'), "") as marketing,
