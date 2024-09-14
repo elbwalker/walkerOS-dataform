@@ -16,6 +16,7 @@ js {
                 count: 1,
                 runs: 1,
                 storage: true,
+                referrer: "",
             },
             globals: {
                 pagegroup: "home",
@@ -70,7 +71,7 @@ js {
                 marketing: true,
                 medium: "cpc",
                 clickId: "r4nd0mbutp11",
-                referrer: "www.google.de",
+                referrer: "partners.shopify.com",
             },
             globals: {
                 pagegroup: "product",
@@ -82,7 +83,7 @@ js {
             source: {
                 type: "web",
                 id: "https://www.example.com/product?utm_medium=cpc&gclid=r4nd0mbutp11",
-                previous_id: "https://www.google.de",
+                previous_id: "partners.shopify.com",
             },
         },
         {
@@ -98,7 +99,7 @@ js {
                 storage: true,
                 marketing: true,
                 medium: "cpc",
-                clickId: "r4nd0mbutp11",
+                clickId: "4ls04p11",
                 referrer: "www.google.de",
             },
             globals: {

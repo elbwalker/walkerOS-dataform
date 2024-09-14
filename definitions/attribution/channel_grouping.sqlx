@@ -3,46 +3,60 @@ config {
     name: "attribution-channel_grouping"
 }
 
+WITH
+  -- Enhance dimension-medium with isPaid column
+  enhanced_dimension_medium AS (
+  SELECT
+    *,
+    CASE
+      WHEN REGEXP_CONTAINS(dm.medium, r'^(.*cp.*|ppc|paid.*|display|affiliate)$') THEN TRUE
+      ELSE FALSE
+  END
+    AS isPaid
+  FROM
+    ${ref("dimension-medium")} dm )
 SELECT
   s.timestamp,
   dss.event_id,
   dss.id,
   CASE
-  -- organic
-    WHEN dm.medium = "organic" THEN "organic"
-  -- display TODO
-  -- paid shopping
-    WHEN ( dm.medium="paid"
-    AND ds.category="shopping") THEN "paid shopping"
-  -- paid search
-    WHEN ( dm.medium="paid" AND ds.category="search" ) THEN "paid search"
-  -- paid social
-    WHEN ( dm.medium="paid"
-    AND ds.category="social" ) THEN "paid social"
-  -- paid video
-    WHEN ( dm.medium="paid" AND ds.category="video" ) THEN "paid social"
-  -- paid other
-    WHEN ( dm.medium="paid" ) THEN "paid other"
-  -- display
-    WHEN ( dm.medium IN ('display', 'banner', 'expendable', 'interstitial', 'cpm')) THEN "display"
-  -- organic shopping
-    WHEN ( dm.medium="organic"
-    AND ds.category="shopping") THEN "organic shopping"
-  -- organic social
-    WHEN ( ( dm.medium="organic" AND ds.category="social") OR (dm.medium IN ("social", "social-network", "social-media", "sm", "social network", "social media") ) )THEN "organic social"
-  -- organic video
-    WHEN ( dm.medium="organic"
-    AND ds.category="video") THEN "organic video"
-  -- organic search
-    WHEN ( dm.medium="organic" AND ds.category="search") THEN "organic search"
-  -- email
-    WHEN ( REGEXP_CONTAINS(ds.source, r'(?i)\b(email|e[\-_ ]mail)\b')
-    OR REGEXP_CONTAINS(dm.medium, r'(?i)\b(email|e[\-_ ]mail)\b')) THEN "email"
-  -- affiliate
-    WHEN ( dm.medium="affiliate") THEN "affiliate"
-  -- referral
-    WHEN ( dm.medium="referral") THEN "referral"
-  -- other
+  -- Direct
+    WHEN ds.category = "direct" THEN "direct"
+  -- Organic
+    WHEN edm.medium = "organic" THEN "organic"
+  -- Paid shopping
+    WHEN ( edm.isPaid = TRUE AND ds.category = "shopping" ) THEN "paid shopping"
+  -- Paid search
+    WHEN ( edm.isPaid = TRUE
+    AND ds.category = "search" ) THEN "paid search"
+  -- Paid social
+    WHEN ( edm.isPaid = TRUE AND ds.category = "social" ) THEN "paid social"
+  -- Paid video
+    WHEN ( edm.isPaid = TRUE
+    AND ds.category = "video" ) THEN "paid video"
+  -- Display
+    WHEN edm.medium IN ('display', 'banner', 'expendable', 'interstitial', 'cpm') THEN "display"
+  -- Organic shopping
+    WHEN ( edm.medium = "organic"
+    AND ds.category = "shopping" ) THEN "organic shopping"
+  -- Organic social
+    WHEN ( ( edm.medium = "organic" AND ds.category = "social" ) OR edm.medium IN ("social", "social-network", "social-media", "sm", "social network", "social media") ) THEN "organic social"
+  -- Organic video
+    WHEN ( edm.medium = "organic"
+    AND ds.category = "video" ) THEN "organic video"
+  -- Organic search
+    WHEN ( edm.medium = "organic" AND ds.category = "search" ) THEN "organic search"
+  -- Email
+    WHEN REGEXP_CONTAINS(ds.source, r'(?i)\b(email|e[\-_ ]mail)\b')
+  OR REGEXP_CONTAINS(edm.medium, r'(?i)\b(email|e[\-_ ]mail)\b') THEN "email"
+  -- Affiliate
+    WHEN edm.medium = "affiliate" THEN "affiliate"
+  -- Referral
+    WHEN (edm.medium = "referral"
+    OR ds.category = "referrer") THEN "referral"
+  -- Paid other
+    WHEN edm.isPaid = TRUE THEN "paid other"
+  -- Other
     ELSE 'other'
 END
   AS channel_group,
@@ -56,10 +70,10 @@ ON
   s.id = dss.event_id
   AND s.timestamp = dss.timestamp
 LEFT JOIN
-  ${ref("dimension-medium")} dm
+  enhanced_dimension_medium edm
 ON
-  dss.id = dm.id
-  AND dss.timestamp = dm.timestamp
+  dss.id = edm.id
+  AND dss.timestamp = edm.timestamp
 LEFT JOIN
   ${ref("dimension-source")} ds
 ON
@@ -68,3 +82,5 @@ ON
 WHERE
   1=1
   --AND DATE(s.timestamp) >= DATE_SUB(CURRENT_DATE(), INTERVAL 2 DAY)
+ORDER BY
+  event_id
