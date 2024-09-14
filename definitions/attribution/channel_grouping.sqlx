@@ -5,8 +5,8 @@ config {
 
 SELECT
   s.timestamp,
-  essd.event_id,
-  essd.id,
+  dss.event_id,
+  dss.id,
   CASE
   -- organic
     WHEN dm.medium = "organic" THEN "organic"
@@ -46,25 +46,25 @@ SELECT
     ELSE 'other'
 END
   AS channel_group,
-  essd.source_id,
-  essd.source_previous_id
+  dss.source_id,
+  dss.source_previous_id
 FROM
   ${ref("sessions")} s
 LEFT JOIN
-  ${ref("session_start-data")} essd
+  ${ref("data-session_start")} dss
 ON
-  s.id = essd.event_id
-  AND s.timestamp = essd.timestamp
+  s.id = dss.event_id
+  AND s.timestamp = dss.timestamp
 LEFT JOIN
   ${ref("dimension-medium")} dm
 ON
-  essd.id = dm.id
-  AND essd.timestamp = dm.timestamp
+  dss.id = dm.id
+  AND dss.timestamp = dm.timestamp
 LEFT JOIN
   ${ref("dimension-source")} ds
 ON
-  essd.id = ds.id
-  AND essd.timestamp = ds.timestamp
+  dss.id = ds.id
+  AND dss.timestamp = ds.timestamp
 WHERE
   1=1
-  --AND DATE(ess.timestamp) >= DATE_SUB(CURRENT_DATE(), INTERVAL 2 DAY)
+  --AND DATE(s.timestamp) >= DATE_SUB(CURRENT_DATE(), INTERVAL 2 DAY)

@@ -9,7 +9,7 @@ WITH
   SELECT
     *
   FROM
-    ${ref("session_start-data")}
+    ${ref("data-session_start")}
   WHERE
     1=1
     --AND DATE(timestamp) >= DATE_SUB(CURRENT_DATE(), INTERVAL 2 DAY)

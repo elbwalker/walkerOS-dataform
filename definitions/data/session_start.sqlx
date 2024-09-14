@@ -1,6 +1,6 @@
 config {
   type: "view",
-  name: "session_start-data",
+  name: "data-session_start",
   description: "Resolved data object",
 }
 

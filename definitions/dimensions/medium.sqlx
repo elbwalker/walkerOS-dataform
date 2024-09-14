@@ -10,38 +10,38 @@ WITH
     *
   FROM
     ${ref("dimension-source")} ),
-  essd AS (
+  dss AS (
   SELECT
     *
   FROM
-    ${ref("session_start-data")} )
+    ${ref("data-session_start")} )
 SELECT
-  essd.timestamp,
-  essd.id,
-  essd.referrer,
-  essd.marketing,
+  dss.timestamp,
+  dss.id,
+  dss.referrer,
+  dss.marketing,
   s.category,
   CASE
   -- UTM
-    WHEN essd.medium IS NOT NULL THEN essd.medium
+    WHEN dss.medium IS NOT NULL THEN dss.medium
   -- Direct traffic
-    WHEN (essd.referrer IS NULL
-    AND essd.marketing IS NULL) THEN 'direct'
+    WHEN (dss.referrer IS NULL
+    AND dss.marketing IS NULL) THEN 'direct'
   -- Organic Search traffic
-    WHEN ((s.category = 'search' OR s.category = 'social') AND essd.marketing IS NULL) THEN 'organic'
+    WHEN ((s.category = 'search' OR s.category = 'social') AND dss.marketing IS NULL) THEN 'organic'
   -- Paid
-    WHEN (essd.clickId IS NOT NULL
-    OR REGEXP_CONTAINS(essd.medium, r'^(.*cp.*|ppc|paid.*)$')) THEN 'paid'
+    WHEN (dss.clickId IS NOT NULL
+    OR REGEXP_CONTAINS(dss.medium, r'^(.*cp.*|ppc|paid.*)$')) THEN 'paid'
     ELSE 'other'
 END
   AS medium
 FROM
-  essd
+  dss
 JOIN
   dimension_source s
 ON
-  essd.id = s.id
-  AND essd.timestamp = s.timestamp
+  dss.id = s.id
+  AND dss.timestamp = s.timestamp
 WHERE
   1=1
-  --AND DATE(essd.timestamp) >= DATE_SUB(CURRENT_DATE(), INTERVAL 2 DAY)
+  --AND DATE(dss.timestamp) >= DATE_SUB(CURRENT_DATE(), INTERVAL 2 DAY)
