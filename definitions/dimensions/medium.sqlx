@@ -30,8 +30,8 @@ SELECT
   -- Organic Search traffic
     WHEN ((s.category = 'search' OR s.category = 'social') AND essd.marketing IS NULL) THEN 'organic'
   -- Paid
-  -- TODO Add more paid flags
-    WHEN (essd.clickId IS NOT NULL) THEN 'paid'
+    WHEN (essd.clickId IS NOT NULL
+    OR REGEXP_CONTAINS(essd.medium, r'^(.*cp.*|ppc|paid.*)$')) THEN 'paid'
     ELSE 'other'
 END
   AS medium
