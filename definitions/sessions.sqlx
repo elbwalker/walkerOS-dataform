@@ -31,7 +31,7 @@ js {
             }
         },
         {
-            "id": "e1",
+            "id": "e2",
             "event": "session start",
             "data": {
                 "id": "s2",
