@@ -6,55 +6,260 @@ config {
 
 js {
     const sessions = [{
-            "id": "e1",
-            "event": "session start",
-            "data": {
-                "id": "s1",
-                "start": 1726300800000,
-                "isNew": true,
-                "count": 1,
-                "runs": 1,
-                "storage": true,
-                "referrer": ""
+            // Direct
+            id: "e1",
+            event: "session start",
+            data: {
+                id: "s1",
+                start: 1726300800000,
+                isNew: true,
+                count: 1,
+                runs: 1,
+                storage: true,
             },
-            "globals": {
-                "pagegroup": "home"
+            globals: {
+                pagegroup: "home",
             },
-            "user": {
-                "session": "s1",
-                "device": "3bws8qiv"
+            user: {
+                session: "s1",
+                device: "1ph0n3",
             },
-            "source": {
-                "type": "web",
-                "id": "https://www.example.com/",
-                "previous_id": ""
-            }
+            source: {
+                type: "web",
+                id: "https://www.example.com/",
+                previous_id: "",
+            },
         },
         {
-            "id": "e2",
-            "event": "session start",
-            "data": {
-                "id": "s2",
-                "start": 1726302660000,
-                "isNew": false,
-                "count": 2,
-                "runs": 1,
-                "storage": true,
-                "referrer": ""
+            // Organic
+            id: "e2",
+            event: "session start",
+            data: {
+                id: "s2",
+                start: 1726302660000,
+                isNew: false,
+                count: 2,
+                runs: 1,
+                storage: true,
+                referrer: "www.google.com",
             },
-            "globals": {
-                "pagegroup": "landingpage"
+            globals: {
+                pagegroup: "landingpage",
             },
-            "user": {
-                "session": "s2",
-                "device": "3bws8qiv"
+            user: {
+                session: "s2",
+                device: "1ph0n3",
             },
-            "source": {
-                "type": "web",
-                "id": "https://www.example.com/use-case/",
-                "previous_id": "https://www.google.com"
-            }
-        }
+            source: {
+                type: "web",
+                id: "https://www.example.com/use-case/",
+                previous_id: "https://www.google.com",
+            },
+        },
+        {
+            // Paid shopping
+            id: "e3",
+            event: "session start",
+            data: {
+                id: "s3",
+                start: 1726303200000,
+                isNew: false,
+                count: 3,
+                runs: 1,
+                storage: true,
+                marketing: true,
+                medium: "cpc",
+                clickId: "r4nd0mbutp11",
+                referrer: "www.google.de",
+            },
+            globals: {
+                pagegroup: "product",
+            },
+            user: {
+                session: "s3",
+                device: "1ph0n3",
+            },
+            source: {
+                type: "web",
+                id: "https://www.example.com/product?utm_medium=cpc&gclid=r4nd0mbutp11",
+                previous_id: "https://www.google.de",
+            },
+        },
+        {
+            // Paid search
+            id: "e4",
+            event: "session start",
+            data: {
+                id: "s4",
+                start: 1726303200000,
+                isNew: false,
+                count: 3,
+                runs: 1,
+                storage: true,
+                marketing: true,
+                medium: "cpc",
+                clickId: "r4nd0mbutp11",
+                referrer: "www.google.de",
+            },
+            globals: {
+                pagegroup: "product",
+            },
+            user: {
+                session: "s4",
+                device: "1ph0n3",
+            },
+            source: {
+                type: "web",
+                id: "https://www.example.com/product?utm_medium=cpc&gclid=4ls04p11",
+                previous_id: "https://www.google.de",
+            },
+        },
+        {
+            // Paid social
+            id: "e5",
+            event: "session start",
+            data: {
+                id: "s5",
+                start: 1726303200000,
+                isNew: false,
+                count: 3,
+                runs: 1,
+                storage: true,
+                marketing: true,
+                source: "facebook",
+                medium: "paid",
+                campaign: "cart_abandonment",
+                referrer: "www.instagram.com",
+            },
+            globals: {
+                pagegroup: "checkout",
+            },
+            user: {
+                session: "s5",
+                device: "1ph0n3",
+            },
+            source: {
+                type: "web",
+                id: "https://www.example.com/checkout?&utm_source=facebook&utm_medium=paid&utm_campaign=cart_abandonment",
+                previous_id: "https://www.instagram.com",
+            },
+        },
+        {
+            // Display
+            id: "e6",
+            event: "session start",
+            data: {
+                id: "s6",
+                start: 1726306200000,
+                isNew: true,
+                count: 1,
+                runs: 1,
+                storage: true,
+                marketing: true,
+                source: "adnetwork",
+                medium: "display",
+                campaign: "summer_sale",
+                referrer: "adnetwork.com",
+            },
+            globals: {
+                pagegroup: "landingpage",
+            },
+            user: {
+                session: "s6",
+                device: "w1nd0ws",
+            },
+            source: {
+                type: "web",
+                id: "https://www.example.com/testimonials?utm_medium=display&utm_source=adnetwork&utm_campaign=summer_sale",
+                previous_id: "https://adnetwork.com",
+            },
+        },
+        {
+            // Email
+            id: "e7",
+            event: "session start",
+            data: {
+                id: "s7",
+                start: 1726308000000,
+                isNew: true,
+                count: 2,
+                runs: 1,
+                storage: true,
+                marketing: true,
+                source: "newsletter",
+                medium: "email",
+                campaign: "lunch_time",
+                referrer: "mail.google.com",
+            },
+            globals: {
+                pagegroup: "cart",
+            },
+            user: {
+                session: "s7",
+                device: "w1nd0ws",
+            },
+            source: {
+                type: "web",
+                id: "https://www.example.com/cart?utm_medium=email&utm_source=newsletter&utm_campaign=lunch_time",
+                previous_id: "https://mail.google.com",
+            },
+        },
+        {
+            // Affiliate
+            id: "e8",
+            event: "session start",
+            data: {
+                id: "s8",
+                start: 1726308600000,
+                isNew: true,
+                count: 1,
+                runs: 1,
+                storage: true,
+                marketing: true,
+                source: "partnerwebsite",
+                medium: "affiliate",
+                campaign: "affiliate_promo",
+                referrer: "partnerwebsite.com",
+            },
+            globals: {
+                pagegroup: "home",
+            },
+            user: {
+                session: "s8",
+                device: "m4c",
+            },
+            source: {
+                type: "web",
+                id: "https://www.example.com/?utm_medium=affiliate&utm_source=partnerwebsite&utm_campaign=affiliate_promo",
+                previous_id: "https://partnerwebsite.com",
+            },
+        },
+        {
+            // Referral
+            id: "e9",
+            event: "session start",
+            data: {
+                id: "s9",
+                start: 1726311600000,
+                isNew: true,
+                count: 1,
+                runs: 1,
+                storage: true,
+                referrer: "anotherwebsite.com",
+            },
+            globals: {
+                pagegroup: "home",
+            },
+            user: {
+                session: "s9",
+                device: "4ndr01d",
+            },
+            source: {
+                type: "web",
+                id: "https://www.example.com/",
+                previous_id: "https://anotherwebsite.com",
+            },
+        },
     ];
 
     let sessionSQL = sessions.map(session => `
