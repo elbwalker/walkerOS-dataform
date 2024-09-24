@@ -24,6 +24,7 @@ js {
             user: {
                 session: "s1",
                 device: "1ph0n3",
+                hash: "t3mph4sh",
             },
             source: {
                 type: "web",
@@ -50,6 +51,7 @@ js {
             user: {
                 session: "s2",
                 device: "1ph0n3",
+                hash: "t3mph4sh",
             },
             source: {
                 type: "web",
@@ -79,6 +81,7 @@ js {
             user: {
                 session: "s3",
                 device: "1ph0n3",
+                hash: "t3mph4sh",
             },
             source: {
                 type: "web",
@@ -108,6 +111,8 @@ js {
             user: {
                 session: "s4",
                 device: "1ph0n3",
+                hash: "t3mph4sh",
+                id: "abc",
             },
             source: {
                 type: "web",
@@ -138,6 +143,8 @@ js {
             user: {
                 session: "s5",
                 device: "1ph0n3",
+                hash: "t3mph4sh",
+                id: "abc",
             },
             source: {
                 type: "web",
@@ -155,7 +162,7 @@ js {
                 isNew: true,
                 count: 1,
                 runs: 1,
-                storage: true,
+                storage: false,
                 marketing: true,
                 source: "adnetwork",
                 medium: "display",
@@ -167,7 +174,7 @@ js {
             },
             user: {
                 session: "s6",
-                device: "w1nd0ws",
+                hash: "unkn0wnh45h",
             },
             source: {
                 type: "web",
@@ -185,7 +192,7 @@ js {
                 isNew: true,
                 count: 2,
                 runs: 1,
-                storage: true,
+                storage: false,
                 marketing: true,
                 source: "newsletter",
                 medium: "email",
@@ -197,7 +204,7 @@ js {
             },
             user: {
                 session: "s7",
-                device: "w1nd0ws",
+                hash: "unkn0wnh45h",
             },
             source: {
                 type: "web",
@@ -228,6 +235,7 @@ js {
             user: {
                 session: "s8",
                 device: "m4c",
+                hash: "ps3ud0nym",
             },
             source: {
                 type: "web",
@@ -254,6 +262,7 @@ js {
             user: {
                 session: "s9",
                 device: "4ndr01d",
+                hash: "n0np3rs1st3nt",
             },
             source: {
                 type: "web",
